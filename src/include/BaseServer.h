@@ -1,7 +1,9 @@
 #ifndef __BASE_SERVER__
 #define __BASE_SERVER__
 
+#include <list>
 #include <unordered_map>
+
 #include "ConnCtx.h"
 
 namespace XEngine 
@@ -19,9 +21,9 @@ public:
     virtual ~CBaseServer();
     virtual void Init();
     virtual void Run();
-    virtual int RpcCall(int fd);
     virtual int RpcDispatch(int fd);
-    int OnNewConnection(conn_fd);
+    int RpcCall(int fd);
+    int OnNewConnection(int connFd);
 private:
     void OnRecvMessage(int fd);
 private:
@@ -29,6 +31,7 @@ private:
     int m_listen_fd; 
     int m_tick; 
     std::unordered_map<int, CConnCtx *> *m_ConnStat;
+    std::list<CConnCtx *> *m_PendingWriteConn;
 };
 
 }
